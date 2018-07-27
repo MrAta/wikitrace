@@ -12,13 +12,13 @@ parser.add_argument("final_name", help="final name for trace")
 
 def get_key(d):
     # group by 1 minute
-    d = dt.datetime.fromtimestamp(int(d[:d.index(".")]))
-    k = d - dt.timedelta(seconds=d.minute % 1)
+    d = dt.datetime.fromtimestamp(float(d))
+    k = d - dt.timedelta(seconds=d.second % 60)
     return dt.datetime(k.year, k.month, k.day, k.hour, k.minute, k.second)
 
 def get_data(f):
     data = open(f, "r").readlines()
-    g = it.groupby(sorted(data), key=get_key)
+    g = it.groupby(sorted([i.strip() for i in data]), key=get_key)
     datapoints = []
     for key, items in g:
         # print(key, ":", len(list(items)))

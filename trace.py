@@ -8,6 +8,7 @@ matplotlib.use("Agg")
 
 parser = argeparse.ArgumentParser()
 parser.add_argument("files", help="files to be analyzed in a comma seprated format")
+parser.add_argument("final_name", help="final name for trace")
 
 def get_key(d):
     # group by 1 minute
@@ -51,13 +52,8 @@ def plot_data(datapoints, f):
     fig.savefig(f+'.png')
 
 
-
-
-if __name__=="__main__":
-    import os
-    args = parser.parse_args()
-    all_files = args.files.split(",")
-    for file_name in all_files:
+def concatenate_files(files, final_name):
+    for file_name in files:
         import subprocess
         from subprocess import call
         print("Decompressing " + file_name)
@@ -69,8 +65,26 @@ if __name__=="__main__":
         out, err = p2.communicate()
         with open(file_name[:-2]+"log" , "w") as f:
             f.write(out)
-        print("Calculating arrival rate...")
-        data = get_data(file_name[:2]+"log")
-        os.remove(file_name[:2]+"log")
-        print("Plotting...")
-        plot_data(data , file_name[:-3])
+        print("Done with "+file_name)
+    with open(final_name, "a") as ht:
+        for file_name in files:
+            with open(file_name[:-2]+"log") as f:
+                for line in f.readlines():
+                    ht.write(line+ "\n")
+            os.remove(file_name[:-2]+"log")
+    print("Concatenating Done!")
+
+if __name__=="__main__":
+    import os
+    args = parser.parse_args()
+    all_files = args.files.split(",")
+    final_name = args.file_name
+    print("Concatenating following files in to "+ final_name+":")
+    for fl in all_files:
+        print("-",fl)
+    concatenate_files(all_files, final_name)
+    print("Calculating timestamps...")
+    data = get_data(final_name)
+    print("Plotting...")
+    plot_data(data , final_name)
+    print("Done")

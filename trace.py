@@ -52,12 +52,13 @@ def plot_data(datapoints, f):
     fig.savefig(f+'.png')
 
 
-def concatenate_files(files, final_name):
+def concatenate_files(files, final_name,cp):
     for file_name in files:
         import subprocess
         from subprocess import call
-        print("Decompressing " + file_name)
-        call(["gunzip",file_name])
+        if cp:
+            print("Decompressing " + file_name)
+            call(["gunzip",file_name])
         print("Extracting timestamps...")
         p1 = subprocess.Popen(["cat", file_name[:-3]], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["awk", "{print $2}"], stdin=p1.stdout, stdout=subprocess.PIPE)
@@ -82,7 +83,7 @@ if __name__=="__main__":
     print("Concatenating following files in to "+ final_name+":")
     for fl in all_files:
         print("-",fl)
-    concatenate_files(all_files, final_name)
+    concatenate_files(all_files, final_name, cp=False)
     print("Calculating timestamps...")
     data = get_data(final_name)
     print("Plotting...")

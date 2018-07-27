@@ -71,7 +71,7 @@ def concatenate_files(files, final_name,cp):
         for file_name in files:
             with open(file_name[:-2]+"log") as f:
                 for line in f.readlines():
-                    ht.write(line+ "\n")
+                    ht.write(line)
             os.remove(file_name[:-2]+"log")
     print("Concatenating Done!")
 

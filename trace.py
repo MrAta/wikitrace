@@ -1,12 +1,12 @@
 import io
 import sys
-import argeparse
+import argparse
 import matplotlib
 import datetime as dt
 import itertools as it
 matplotlib.use("Agg")
 
-parser = argeparse.ArgumentParser()
+parser = argparse.ArgumentParser()
 parser.add_argument("files", help="files to be analyzed in a comma seprated format")
 parser.add_argument("final_name", help="final name for trace")
 
@@ -60,11 +60,11 @@ def concatenate_files(files, final_name):
         call(["gunzip",file_name])
         print("Extracting timestamps...")
         p1 = subprocess.Popen(["cat", file_name[:-3]], stdout=subprocess.PIPE)
-        p2 = subprocess.Popen(["awk", "'{print $2}'"], stdin=p1.stdout, stdout=subprocess.PIPE)
+        p2 = subprocess.Popen(["awk", "{print $2}"], stdin=p1.stdout, stdout=subprocess.PIPE)
         p1.stdout.close()
         out, err = p2.communicate()
         with open(file_name[:-2]+"log" , "w") as f:
-            f.write(out)
+            f.write(out.decode("utf-8") )
         print("Done with "+file_name)
     with open(final_name, "a") as ht:
         for file_name in files:
@@ -78,7 +78,7 @@ if __name__=="__main__":
     import os
     args = parser.parse_args()
     all_files = args.files.split(",")
-    final_name = args.file_name
+    final_name = args.final_name
     print("Concatenating following files in to "+ final_name+":")
     for fl in all_files:
         print("-",fl)

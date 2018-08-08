@@ -18,10 +18,7 @@ def normizer(fin,fout, factor):
     timestamps = []
     for key, items in g:
         _i = list(items)
-        print("MATAA : " , len(_i))
         ch = int(len(_i)*factor)
-        print("MATAA : " , len(_i))
-        print(ch)
         timestamps += random.sample(_i,ch )
 
     print(len(timestamps))

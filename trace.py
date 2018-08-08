@@ -21,7 +21,7 @@ def get_data(f):
     g = it.groupby(sorted([i.strip() for i in data]), key=get_key)
     datapoints = []
     for key, items in g:
-        # print(key, ":", len(list(items)))
+        print(key, ":", len(list(items)))
         datapoints.append(len(list(items)))
         # for item in items:
         #     print('-', dt.datetime.fromtimestamp(float(item)).second)
